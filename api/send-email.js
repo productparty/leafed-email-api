@@ -16,6 +16,15 @@ const transporter = nodemailer.createTransport({
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+  // Additional options to improve deliverability
+  tls: {
+    // Do not fail on invalid certificates
+    rejectUnauthorized: false,
+  },
+  // Connection timeout
+  connectionTimeout: 5000,
+  // Greeting timeout
+  greetingTimeout: 5000,
 });
 
 /**
@@ -187,7 +196,7 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Prepare email options
+    // Prepare email options with proper headers to avoid spam
     const mailOptions = {
       from: `"${process.env.SMTP_FROM_NAME || 'Leafed App'}" <${process.env.SMTP_FROM}>`,
       to: process.env.SMTP_TO,
@@ -195,6 +204,18 @@ module.exports = async (req, res) => {
       subject: `Leafed App Contact: ${formData.subject}`,
       text: generateEmailText(formData),
       html: generateEmailHTML(formData),
+      // Add proper email headers to improve deliverability
+      headers: {
+        'Message-ID': `<${Date.now()}-${Math.random().toString(36)}@leafedapp.com>`,
+        'X-Mailer': 'Leafed App Contact Form',
+        'X-Priority': '3',
+        'Importance': 'normal',
+        'List-Unsubscribe': `<mailto:${process.env.SMTP_FROM}?subject=unsubscribe>`,
+      },
+      // Set priority to normal (not urgent)
+      priority: 'normal',
+      // Add date header
+      date: new Date(),
     };
 
     // Send email
