@@ -1,0 +1,26 @@
+{
+  "name": "leafed-email-api",
+  "version": "1.0.0",
+  "description": "Vercel serverless function for sending contact form emails via SMTP",
+  "main": "api/send-email.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vercel",
+    "serverless",
+    "email",
+    "nodemailer",
+    "smtp",
+    "contact-form"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "nodemailer": "^6.9.8"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
+
